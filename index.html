@@ -1,19 +1,37 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Constancy</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-	<title>Fable React</title>
-	<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.1/css/bulma.min.css" />
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-		integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
-</head>
-
-<body>
-    <div id="app-container"></div>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.1/css/bulma.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <header>
+    <div class="logo">
+      <img src="./assets/logo.svg" width="200" alt="" />
+    </div>
+    <nav>
+      <a href="/home" style="text-decoration: none">HOME</a>
+      <a href="/Chart" style="text-decoration: none">SERVICES</a>
+      <a href="/contato" style="text-decoration: none">ABOUT</a>
+      <a href="/contato" style="text-decoration: none">TEAM</a>
+      <a href="/contato" style="text-decoration: none">CONTACT</a>
+      <a href="/contato" style="text-decoration: none">LOGOUT</a>
+    </nav>
+  </header>
+  <body style="background-image: url(./assets/background-circles.svg)">
+    <div class="container" id="app-container"></div>
     <script type="module" src="./dist/App.jsx"></script>
-</body>
-
+  </body>
 </html>

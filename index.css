@@ -1,0 +1,52 @@
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #002952;
+  padding: 20px 20px;
+}
+
+nav {
+  color: #fff;
+  background-color: transparent;
+  font-size: small;
+  width: 350px;
+  display: flex;
+  margin-right: 100px;
+  justify-content: space-between;
+}
+
+.logo {
+  margin-left: 100px;
+  background-color: transparent;
+}
+
+a:link {
+  color: #fff;
+}
+a:visited {
+  color: #fff;
+}
+
+/* mouse over */
+a:hover {
+  color: #000000;
+}
+
+/* link selecionado */
+a:active {
+  color: #fff;
+}
+
+body {
+  height: 1000px;
+  background-color: #204669;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}

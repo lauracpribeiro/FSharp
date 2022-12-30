@@ -16,97 +16,51 @@ module private Elmish =
         {
             Id: Guid
             Description: string
-            Completed: bool
+            Display: bool
         }
 
     type State = { Todos: Todo list }
 
     type Msg =
-        | AddNewTodo of string
-        | DeleteTodo of Guid
-        | ToggleCompleted of Guid
-        | ApplyEdit of Guid * string
+        | ToggleDisplay of Guid
 
     let newTodo txt =
         {
             Id = Guid.NewGuid()
             Description = txt
-            Completed = false
+            Display = true
         }
 
     let initTodos (count: int) =
         [
-            newTodo "Learn F#"
-            { newTodo $"Learn Elmish  in {count} days" with
-                Completed = true
-            }
+            newTodo "Market Data"
+            { newTodo "Blotter" with Display = false}
+            
         ]
 
     let init (count: int) = { Todos = initTodos count }, Cmd.none
 
     let update (msg: Msg) (state: State) =
         match msg with
-        | AddNewTodo txt ->
-            { state with
-                Todos = (newTodo txt) :: state.Todos
-            },
-            Cmd.none
 
-        | DeleteTodo todoId ->
-            state.Todos
-            |> List.filter (fun todo -> todo.Id <> todoId)
-            |> fun todos -> { state with Todos = todos }, Cmd.none
-
-        | ToggleCompleted todoId ->
+        | ToggleDisplay todoId ->
             state.Todos
             |> List.map (fun todo ->
                 if todo.Id = todoId then
-                    let completed = not todo.Completed
-                    { todo with Completed = completed }
+                    let completed = not todo.Display
+                    { todo with Display = completed }
                 else
                     todo)
             |> fun todos -> { state with Todos = todos }, Cmd.none
 
-        | ApplyEdit (todoId, txt) ->
-            state.Todos
-            |> List.map (fun todo ->
-                if todo.Id = todoId then
-                    { todo with Description = txt }
-                else
-                    todo)
-            |> fun todos -> { state with Todos = todos }, Cmd.none
 
 module private Components =
     open Elmish
 
     [<JSX.Component>]
-    let InputField (dispatch: Msg -> unit) =
-        let inputRef = React.useRef<HTMLInputElement option> (None)
-
-        JSX.jsx
-            $"""
-        <div className="field has-addons">
-            <div className="control is-expanded">
-                <input ref={inputRef}
-                       className="input is-medium"
-                       autoFocus={true}
-                       onKeyUp={onEnterOrEscape (AddNewTodo >> dispatch) ignore}>
-                </input>
-            </div>
-            <div className="control">
-                <button className="button is-primary is-medium"
-                        onClick={fun _ ->
-                                     let txt = inputRef.current.Value.value
-                                     inputRef.current.Value.value <- ""
-                                     txt |> AddNewTodo |> dispatch}>
-                    <i className="fa fa-plus"></i>
-                </button>
-            </div>
-        </div>
-        """
-
-    [<JSX.Component>]
     let Button (iconClass: string) (classes: (string * bool) list) dispatch =
+     
+        
         JSX.jsx
             $"""
         <button type="button"
@@ -123,9 +77,6 @@ module private Components =
         let edit, setEdit = React.useState<string option> (None)
         let isEditing = Option.isSome edit
 
-        let applyEdit edit =
-            ApplyEdit(todo.Id, edit) |> dispatch
-            setEdit None
 
         React.useEffect (
             (fun () ->
@@ -139,53 +90,31 @@ module private Components =
 
         JSX.jsx
             $"""
-        import {{ SlQrCode }} from "@shoelace-style/shoelace/dist/react"
 
         <li className="box">
             <div className="columns">
                 <div className="column is-7">
                 {match edit with
-                 | Some edit ->
-                     Html.input
-                         [
-                             prop.ref inputRef
-                             prop.classes [ "input"; "is-medium" ]
-                             prop.value edit
-                             prop.onChange (Some >> setEdit)
-                             prop.onKeyDown (onEnterOrEscape applyEdit (fun _ -> setEdit None))
-                             prop.onBlur (fun _ -> setEdit None)
-                         ]
                  | None ->
                      Html.p
                          [
                              prop.className "subtitle"
-                             prop.onDoubleClick (fun _ -> Some todo.Description |> setEdit)
                              prop.style [ style.userSelect.none; style.cursor.pointer ]
                              prop.children [ Html.text todo.Description ]
                          ]}                
                 </div>
                 {Html.div
                      [
-                         prop.className "column is-3"
+                         prop.className "column is-2"
                          prop.children
                              [
-                                 if isEditing then
-                                     Button "fa fa-save" [ "is-primary", true ] (fun () -> applyEdit edit.Value)
-                                     |> toReact
-                                 else
-                                     Button "fa fa-check" [ "is-success", todo.Completed ] (fun () -> ToggleCompleted todo.Id |> dispatch)
+
+                                    Button "fa fa-check" [ "is-success", todo.Display ] (fun () -> ToggleDisplay todo.Id |> dispatch)
                                      |> toReact
 
-                                     Button "fa fa-edit" [ "is-primary", true ] (fun () -> Some todo.Description |> setEdit)
-                                     |> toReact
 
-                                     Button "fa fa-times" [ "is-danger", true ] (fun () -> DeleteTodo todo.Id |> dispatch)
-                                     |> toReact
                              ]
                      ]}
-                <div className="column is-2">
-                    <SlQrCode value={todo.Description} size="64" radius="0.5"></SlQrCode>
-                </div>
             </div>
         </li>
         """
@@ -199,9 +128,11 @@ let App () =
 
     JSX.jsx
         $"""
-    <div className="container mx-5 mt-5 is-max-desktop">
-        <p className="title">My Todos</p>
-        {InputField dispatch}
+    <div className="container">
         <ul>{model.Todos |> List.map (fun t -> TodoView dispatch t t.Id)}</ul>
     </div>
     """
+
+
+
+       
